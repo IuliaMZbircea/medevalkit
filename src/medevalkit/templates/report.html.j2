@@ -4,205 +4,484 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MedEvalKit Report - {{ run.id }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-light: #dbeafe;
+            --secondary-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --danger-light: #fef2f2;
+            --success-color: #22c55e;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --border-radius: 12px;
+            --border-radius-sm: 8px;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.6;
-            color: #333;
-            max-width: 1200px;
+            color: var(--gray-800);
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
+            padding: 2rem;
         }
         
         .header {
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff 0%, #f8fafc 100%);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 2rem;
+            border: 1px solid var(--gray-200);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .header-icon {
+            width: 3rem;
+            height: 3rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: var(--border-radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
         }
         
-        h1, h2, h3 {
-            color: #2c3e50;
+        h1 {
+            color: var(--gray-900);
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: -0.025em;
+        }
+
+        h2 {
+            color: var(--gray-800);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0 0 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        h3 {
+            color: var(--gray-700);
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin: 0 0 1rem 0;
         }
         
         .config-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin: 0;
         }
         
         .config-item {
-            background: #f8f9fa;
-            padding: 10px;
-            border-radius: 5px;
+            background: var(--gray-50);
+            padding: 1rem;
+            border-radius: var(--border-radius-sm);
+            border: 1px solid var(--gray-200);
+            transition: all 0.2s ease;
+        }
+
+        .config-item:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
         }
         
         .config-label {
-            font-size: 0.85em;
-            color: #666;
+            font-size: 0.8rem;
+            color: var(--gray-500);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
         }
         
         .config-value {
-            font-weight: bold;
-            color: #2c3e50;
+            font-weight: 600;
+            color: var(--gray-900);
+            font-size: 0.95rem;
         }
         
         .panel {
             background: white;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            border: 1px solid var(--gray-200);
+            transition: all 0.2s ease;
+        }
+
+        .panel:hover {
+            box-shadow: var(--shadow-lg);
         }
         
         .metrics-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 20px 0;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
         }
         
         .metric-card {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
+            background: linear-gradient(135deg, var(--gray-50) 0%, white 100%);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
             text-align: center;
+            border: 1px solid var(--gray-200);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .metric-card:hover::before {
+            transform: translateX(0);
+        }
+
+        .metric-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .metric-card.warning {
+            background: linear-gradient(135deg, #fef3c7 0%, #fbbf24 10%, white 100%);
+        }
+
+        .metric-card.danger {
+            background: linear-gradient(135deg, var(--danger-light) 0%, #fca5a5 10%, white 100%);
         }
         
         .metric-value {
-            font-size: 2em;
-            font-weight: bold;
-            color: #2c3e50;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 0.25rem;
+            line-height: 1;
         }
         
         .metric-label {
-            color: #666;
-            margin-top: 5px;
+            color: var(--gray-600);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-top: 0.5rem;
+        }
+
+        .metric-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: var(--primary-color);
         }
         
         .bar-chart {
-            margin: 20px 0;
+            margin: 2rem 0;
+        }
+        
+        .bar-container {
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        .bar-background {
+            height: 3rem;
+            background: var(--gray-100);
+            border-radius: var(--border-radius-sm);
+            position: relative;
+            overflow: hidden;
         }
         
         .bar {
-            height: 30px;
-            margin: 10px 0;
-            background: #3498db;
-            border-radius: 4px;
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: var(--border-radius-sm);
             position: relative;
-            transition: width 0.3s ease;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: slideIn 0.8s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                width: 0 !important;
+            }
         }
         
         .bar-label {
             position: absolute;
-            left: 10px;
+            left: 1rem;
             top: 50%;
             transform: translateY(-50%);
             color: white;
-            font-weight: bold;
+            font-weight: 600;
+            font-size: 0.9rem;
+            z-index: 2;
         }
         
         .bar-value {
             position: absolute;
-            right: 10px;
+            right: 1rem;
             top: 50%;
             transform: translateY(-50%);
             color: white;
+            font-weight: 700;
+            font-size: 0.9rem;
+            z-index: 2;
+        }
+
+        .bar-label-outside {
+            position: absolute;
+            left: 1rem;
+            top: -1.75rem;
+            color: var(--gray-700);
+            font-weight: 600;
+            font-size: 0.9rem;
         }
         
         .flagged-section {
-            background: #fee;
-            border: 1px solid #fcc;
-            border-radius: 8px;
-            padding: 15px;
-            margin: 20px 0;
+            background: linear-gradient(135deg, var(--danger-light) 0%, #fff5f5 100%);
+            border: 2px solid #fca5a5;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .flagged-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--danger-color);
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
         }
         
         .flagged-row {
             background: white;
-            border: 1px solid #e74c3c;
-            border-radius: 5px;
-            padding: 15px;
-            margin: 10px 0;
+            border: 1px solid var(--danger-color);
+            border-radius: var(--border-radius-sm);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+        }
+
+        .flagged-row:hover {
+            box-shadow: var(--shadow);
+            border-color: #dc2626;
         }
         
         .question-accordion {
-            margin: 20px 0;
+            margin: 2rem 0;
+            display: grid;
+            gap: 1rem;
         }
         
         .accordion-item {
             background: white;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin: 10px 0;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .accordion-item:hover {
+            box-shadow: var(--shadow);
+            border-color: var(--gray-300);
         }
         
         .accordion-header {
-            padding: 15px;
+            padding: 1.25rem 1.5rem;
             cursor: pointer;
-            background: #f8f9fa;
-            border-radius: 5px;
+            background: var(--gray-50);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid var(--gray-200);
         }
         
         .accordion-header:hover {
-            background: #e9ecef;
+            background: var(--primary-light);
+        }
+
+        .accordion-header.active {
+            background: var(--primary-light);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .accordion-toggle {
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+            background: var(--gray-300);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            color: var(--gray-600);
+        }
+
+        .accordion-header:hover .accordion-toggle {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .accordion-header.active .accordion-toggle {
+            background: var(--primary-color);
+            color: white;
+            transform: rotate(180deg);
         }
         
         .accordion-content {
-            padding: 15px;
+            padding: 1.5rem;
             display: none;
-            border-top: 1px solid #ddd;
+            animation: slideDown 0.3s ease-out;
         }
         
         .accordion-content.show {
             display: block;
         }
-        
-        .score-badge {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.9em;
-            font-weight: bold;
-            margin: 2px;
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                max-height: 0;
+            }
+            to {
+                opacity: 1;
+                max-height: 1000px;
+            }
         }
         
-        .score-1 { background: #e74c3c; color: white; }
-        .score-2 { background: #e67e22; color: white; }
-        .score-3 { background: #f39c12; color: white; }
-        .score-4 { background: #27ae60; color: white; }
-        .score-5 { background: #2ecc71; color: white; }
+        .score-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin: 0.125rem;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .score-1 { background: #fef2f2; color: #991b1b; border: 1px solid #fca5a5; }
+        .score-2 { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+        .score-3 { background: #fef3c7; color: #d97706; border: 1px solid #fbbf24; }
+        .score-4 { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
+        .score-5 { background: #dcfce7; color: #14532d; border: 1px solid #86efac; }
         
         .critical-flag {
-            background: #e74c3c;
+            background: var(--danger-color);
             color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-weight: bold;
-            font-size: 0.9em;
+            padding: 0.375rem 0.75rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            box-shadow: var(--shadow-sm);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.8;
+            }
         }
         
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
+            margin: 1.5rem 0;
+            background: white;
+            border-radius: var(--border-radius-sm);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
         }
         
         th, td {
             text-align: left;
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-200);
         }
         
         th {
-            background: #f8f9fa;
-            font-weight: bold;
+            background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
+            font-weight: 600;
+            color: var(--gray-700);
+            font-size: 0.875rem;
+        }
+
+        tbody tr:hover {
+            background: var(--gray-50);
         }
         
         .json-display {
@@ -215,20 +494,155 @@
             overflow-x: auto;
         }
         
-        .confidence-low { color: #e74c3c; }
-        .confidence-medium { color: #f39c12; }
-        .confidence-high { color: #27ae60; }
+        .confidence-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
         
+        .confidence-low {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+        
+        .confidence-medium {
+            background: #fef3c7;
+            color: #d97706;
+            border: 1px solid #fbbf24;
+        }
+        
+        .confidence-high {
+            background: #dcfce7;
+            color: #14532d;
+            border: 1px solid #86efac;
+        }
+        
+        .navigation {
+            position: sticky;
+            top: 2rem;
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            border: 1px solid var(--gray-200);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius-sm);
+            background: var(--gray-50);
+            color: var(--gray-700);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+            border: 1px solid var(--gray-200);
+        }
+
+        .nav-link:hover {
+            background: var(--primary-light);
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .status-indicator {
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+
+        .status-success { background: var(--success-color); }
+        .status-warning { background: var(--warning-color); }
+        .status-danger { background: var(--danger-color); }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .stat-item {
+            background: var(--gray-50);
+            padding: 1rem;
+            border-radius: var(--border-radius-sm);
+            border: 1px solid var(--gray-200);
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            margin-top: 0.25rem;
+        }
+
         @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
             .config-grid, .metrics-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .header {
+                padding: 1.5rem;
+            }
+            
+            .panel {
+                padding: 1.5rem;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 1.875rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>MedEvalKit Evaluation Report</h1>
+    <div class="container">
+        <!-- Navigation -->
+        <div class="navigation">
+            <div class="nav-links">
+                <a href="#overview" class="nav-link"><i class="fas fa-chart-line"></i> Overview</a>
+                <a href="#metrics" class="nav-link"><i class="fas fa-tachometer-alt"></i> Metrics</a>
+                {% if flagged_responses %}
+                <a href="#safety" class="nav-link"><i class="fas fa-exclamation-triangle"></i> Safety Issues</a>
+                {% endif %}
+                <a href="#results" class="nav-link"><i class="fas fa-list"></i> Results</a>
+            </div>
+        </div>
+
+        <div class="header" id="overview">
+        <div class="header-title">
+            <div class="header-icon">
+                <i class="fas fa-stethoscope"></i>
+            </div>
+            <div>
+                <h1>MedEvalKit Evaluation Report</h1>
+                <p style="margin: 0; color: var(--gray-600); font-size: 1rem;">Medical AI Safety Evaluation Dashboard</p>
+            </div>
+        </div>
         <div class="config-grid">
             <div class="config-item">
                 <div class="config-label">Run ID</div>
@@ -257,55 +671,72 @@
         </div>
     </div>
 
-    <div class="panel">
-        <h2>Aggregate Metrics</h2>
+    <div class="panel" id="metrics">
+        <h2><i class="fas fa-chart-bar"></i> Aggregate Metrics</h2>
         
         <div class="metrics-grid">
             <div class="metric-card">
-                <div class="metric-value">{{ aggregates.successful_responses }}/{{ aggregates.total_questions }}</div>
+                <div class="metric-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="metric-value">{{ aggregates.successful_responses }}<span style="font-size: 1rem; color: var(--gray-500);">/{{ aggregates.total_questions }}</span></div>
                 <div class="metric-label">Successful Evaluations</div>
             </div>
             <div class="metric-card">
+                <div class="metric-icon"><i class="fas fa-code"></i></div>
                 <div class="metric-value">{{ "%.1f"|format(aggregates.response_parse_rate * 100) }}%</div>
                 <div class="metric-label">Response Parse Rate</div>
             </div>
             <div class="metric-card">
+                <div class="metric-icon"><i class="fas fa-balance-scale"></i></div>
                 <div class="metric-value">{{ "%.1f"|format(aggregates.judge_parse_rate * 100) }}%</div>
                 <div class="metric-label">Judge Parse Rate</div>
             </div>
-            <div class="metric-card" {% if aggregates.critical_safety_issues > 0 %}style="background: #fee;"{% endif %}>
+            <div class="metric-card{% if aggregates.critical_safety_issues > 0 %} danger{% endif %}">
+                <div class="metric-icon"><i class="fas fa-shield-alt"></i></div>
                 <div class="metric-value">{{ aggregates.critical_safety_issues }}</div>
                 <div class="metric-label">Critical Safety Issues</div>
             </div>
         </div>
 
-        <h3>Dimension Scores</h3>
+        <h3><i class="fas fa-chart-line"></i> Dimension Scores</h3>
         <div class="bar-chart">
             {% for dimension, score in aggregates.mean_scores.items() %}
-            <div style="position: relative; margin: 15px 0;">
-                <div class="bar" style="width: {{ (score / 5 * 100) }}%;">
-                    <span class="bar-label">{{ dimension.replace('_', ' ').title() }}</span>
-                    <span class="bar-value">{{ "%.2f"|format(score) }}/5</span>
+            <div class="bar-container">
+                {% if score / 5 > 0.6 %}
+                <div class="bar-label-outside">{{ dimension.replace('_', ' ').title() }}</div>
+                {% endif %}
+                <div class="bar-background">
+                    <div class="bar" style="width: {{ (score / 5 * 100) }}%;">
+                        {% if score / 5 <= 0.6 %}
+                        <span class="bar-label">{{ dimension.replace('_', ' ').title() }}</span>
+                        {% endif %}
+                        <span class="bar-value">{{ "%.2f"|format(score) }}/5</span>
+                    </div>
                 </div>
             </div>
             {% endfor %}
         </div>
 
-        <div class="metrics-grid" style="margin-top: 30px;">
-            <div class="metric-card">
-                <div class="metric-value">{{ "%.0f"|format(aggregates.mean_response_latency_ms) }}ms</div>
-                <div class="metric-label">Mean Response Latency</div>
+        <div class="summary-stats">
+            <div class="stat-item">
+                <div class="stat-value">{{ "%.0f"|format(aggregates.mean_response_latency_ms) }}ms</div>
+                <div class="stat-label"><i class="fas fa-robot"></i> Mean Response Latency</div>
             </div>
-            <div class="metric-card">
-                <div class="metric-value">{{ "%.0f"|format(aggregates.mean_judge_latency_ms) }}ms</div>
-                <div class="metric-label">Mean Judge Latency</div>
+            <div class="stat-item">
+                <div class="stat-value">{{ "%.0f"|format(aggregates.mean_judge_latency_ms) }}ms</div>
+                <div class="stat-label"><i class="fas fa-gavel"></i> Mean Judge Latency</div>
             </div>
+            {% if aggregates.overall_mean_score %}
+            <div class="stat-item">
+                <div class="stat-value">{{ "%.2f"|format(aggregates.overall_mean_score) }}/5</div>
+                <div class="stat-label"><i class="fas fa-star"></i> Overall Score</div>
+            </div>
+            {% endif %}
         </div>
     </div>
 
     {% if flagged_responses %}
-    <div class="panel flagged-section">
-        <h2>⚠️ Critical Safety Issues ({{ flagged_responses|length }})</h2>
+    <div class="panel flagged-section" id="safety">
+        <h2><i class="fas fa-exclamation-triangle"></i> Critical Safety Issues ({{ flagged_responses|length }})</h2>
         <p>The following responses were flagged by the judge as potentially causing patient harm if followed.</p>
         
         {% for flagged in flagged_responses %}
@@ -319,20 +750,30 @@
     </div>
     {% endif %}
 
-    <div class="panel">
-        <h2>Detailed Results</h2>
+    <div class="panel" id="results">
+        <h2><i class="fas fa-list-alt"></i> Detailed Results</h2>
         <div class="question-accordion">
             {% for result in full_results %}
             <div class="accordion-item">
                 <div class="accordion-header" onclick="toggleAccordion(this)">
-                    <div>
-                        <strong>Q{{ loop.index }}:</strong> {{ result.question_text[:80] }}{% if result.question_text|length > 80 %}...{% endif %}
-                        {% if result.evaluations and result.evaluations[0].critical_safety_issue %}
-                        <span class="critical-flag">SAFETY ISSUE</span>
-                        {% endif %}
+                    <div style="flex: 1;">
+                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                            <span class="status-indicator {% if result.response.parse_ok %}status-success{% else %}status-danger{% endif %}"></span>
+                            <strong>Q{{ loop.index }}:</strong>
+                            {% if result.evaluations and result.evaluations[0].critical_safety_issue %}
+                            <span class="critical-flag"><i class="fas fa-exclamation-triangle"></i> SAFETY ISSUE</span>
+                            {% endif %}
+                        </div>
+                        <div style="color: var(--gray-600); font-size: 0.95rem;">{{ result.question_text[:100] }}{% if result.question_text|length > 100 %}...{% endif %}</div>
                     </div>
-                    <div>
-                        <span class="confidence-{{ result.response.confidence }}">{{ result.response.confidence }}</span>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <span class="confidence-badge confidence-{{ result.response.confidence }}">
+                            <i class="fas fa-thermometer-{% if result.response.confidence == 'high' %}three-quarters{% elif result.response.confidence == 'medium' %}half{% else %}quarter{% endif %}"></i>
+                            {{ result.response.confidence }}
+                        </span>
+                        <div class="accordion-toggle">
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
                     </div>
                 </div>
                 <div class="accordion-content">
@@ -369,14 +810,17 @@
                         {% for dimension, data in eval.scores.items() %}
                         <tr>
                             <td>{{ dimension.replace('_', ' ').title() }}</td>
-                            <td><span class="score-badge score-{{ data.score }}">{{ data.score }}/5</span></td>
+                            <td><span class="score-badge score-{{ data.score }}"><i class="fas fa-{% if data.score >= 4 %}check{% elif data.score >= 3 %}minus{% else %}times{% endif %}"></i> {{ data.score }}/5</span></td>
                             <td>{{ data.rationale }}</td>
                         </tr>
                         {% endfor %}
                     </table>
                     <p><strong>Overall Summary:</strong> {{ eval.overall_summary }}</p>
                     {% if eval.critical_safety_issue %}
-                    <p class="critical-flag">Critical Safety Issue: {{ eval.critical_safety_rationale }}</p>
+                    <div style="background: var(--danger-light); padding: 1rem; border-radius: var(--border-radius-sm); border-left: 4px solid var(--danger-color); margin: 1rem 0;">
+                        <p class="critical-flag"><i class="fas fa-exclamation-triangle"></i> Critical Safety Issue</p>
+                        <p style="margin: 0.5rem 0 0 0; color: var(--gray-700);">{{ eval.critical_safety_rationale }}</p>
+                    </div>
                     {% endif %}
                     {% endfor %}
                     {% endif %}
@@ -394,15 +838,58 @@ Latency: {{ result.response.latency_ms }}ms</pre>
         </div>
     </div>
 
-    <div style="text-align: center; color: #666; margin: 40px 0;">
-        <small>Generated by MedEvalKit on {{ generation_time }}</small>
+        <div style="text-align: center; color: var(--gray-500); margin: 3rem 0 2rem 0; padding: 2rem; background: var(--gray-50); border-radius: var(--border-radius); border: 1px solid var(--gray-200);">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                <i class="fas fa-stethoscope" style="color: var(--primary-color);"></i>
+                <strong style="color: var(--gray-700);">MedEvalKit v0.1.0</strong>
+            </div>
+            <small>Generated on {{ generation_time }}</small>
+        </div>
     </div>
 
     <script>
         function toggleAccordion(header) {
             const content = header.nextElementSibling;
-            content.classList.toggle('show');
+            const isOpen = content.classList.contains('show');
+            
+            // Close all other accordions
+            document.querySelectorAll('.accordion-content.show').forEach(el => {
+                el.classList.remove('show');
+            });
+            document.querySelectorAll('.accordion-header.active').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            // Toggle current accordion
+            if (!isOpen) {
+                content.classList.add('show');
+                header.classList.add('active');
+            }
         }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add loading animation for bars
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                document.querySelectorAll('.bar').forEach(bar => {
+                    bar.style.opacity = '1';
+                });
+            }, 100);
+        });
     </script>
 </body>
 </html>
