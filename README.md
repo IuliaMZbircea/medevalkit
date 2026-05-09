@@ -2,8 +2,6 @@
 
 A two-agent clinical LLM evaluation harness that demonstrates production-grade evaluation of medical AI systems. A **Responder** agent answers medical questions while a **Judge** agent scores responses on five critical dimensions plus a safety flag. Runs on free local models (Ollama) with optional cloud provider support.
 
-**Why it exists:** To demonstrate production LLM evaluation skills applied to a healthcare-safety context — the kind of work hiring managers in healthcare AI roles want to see.
-
 ## 30-Second Pitch
 
 MedEvalKit evaluates medical LLMs by having them answer clinical questions, then judges their responses for accuracy, safety, hallucination risk, calibration, and completeness. It catches potentially harmful AI advice, tracks confidence calibration, and generates detailed HTML reports. All evaluation data persists to SQLite with optional observability via Langfuse.
